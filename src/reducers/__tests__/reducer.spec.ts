@@ -1,78 +1,78 @@
-import { reducer, IState } from '../index';
+import { reducer, IState } from "../index"
 import {
   loadCount,
   resetCounter,
   saveCount,
-  incrementCounter,
-} from '../../reducers';
-import { api } from '../../api';
-import { Cmd, loop } from 'redux-loop';
+  incrementCounter
+} from "../../reducers"
+import { api } from "../../api"
+import { Cmd, loop } from "redux-loop"
 
-describe('reducer', () => {
-  let state: IState;
+describe("reducer", () => {
+  let state: IState
 
   beforeEach(() => {
     state = {
       counter: 0,
       isSaving: false,
       isLoading: false,
-      error: undefined,
-    };
-  });
+      error: undefined
+    }
+  })
 
-  it('unknown action should return the initial state', () => {
-    expect(reducer(undefined, { type: 'noOp' })).toEqual(state);
-  });
+  it("unknown action should return the initial state", () => {
+    expect(reducer(undefined, { type: "noOp" })).toEqual(state)
+  })
 
-  it('incrementCounter() should increment counter by 1', () => {
+  it("incrementCounter() should increment counter by 1", () => {
     expect(reducer(undefined, incrementCounter())).toEqual({
       ...state,
-      counter: 1,
-    });
-  });
+      counter: 1
+    })
+  })
 
-  it('resetCounter() should return the initial state', () => {
+  it("resetCounter() should return the initial state", () => {
     expect(reducer({ ...state, counter: 5 }, resetCounter())).toEqual({
       ...state,
-      counter: 0,
-    });
-  });
+      counter: 0
+    })
+  })
 
-  describe('loadCount()', () => {
-    it('returns an object which deeply equals the object returned by reducer', () => {
-      const result = reducer(state, loadCount.request());
-
-      expect(
-        loop(
-          { ...state, isLoading: true },
-          Cmd.run(api.load, {
-            successActionCreator: loadCount.success,
-            failActionCreator: loadCount.failure,
-          })
-        )
-      ).toEqual(result);
-    });
-  });
-
-  describe('loadCount()', () => {
-    it('returns an object which deeply equals the object returned by reducer', () => {
-      const result = reducer(state, loadCount.request());
+  describe("loadCount()", () => {
+    it("returns an object which deeply equals the object returned by reducer", () => {
+      const result = reducer(state, loadCount.request())
 
       expect(
         loop(
           { ...state, isLoading: true },
           Cmd.run(api.load, {
             successActionCreator: loadCount.success,
-            failActionCreator: loadCount.failure,
+            failActionCreator: loadCount.failure
           })
         )
-      ).toEqual(result);
-    });
-  });
+      ).toEqual(result)
+    })
+  })
 
-  describe('saveCount()', () => {
-    it(' returns an object which deeply equals the object returned by reducer', () => {
-      const result = reducer(state, saveCount.request(5));
+  describe("loadCount()", () => {
+    it("returns an object which deeply equals the object returned by reducer", () => {
+      const result = reducer(state, loadCount.request())
+
+      expect(
+        loop(
+          { ...state, isLoading: true },
+          Cmd.run(api.load, {
+            successActionCreator: loadCount.success,
+            failActionCreator: loadCount.failure
+          })
+        )
+      ).toEqual(result)
+    })
+  })
+
+  describe("saveCount()", () => {
+    it(" returns an object which deeply equals the object returned by reducer", () => {
+      const result = reducer(state, saveCount.request(5))
 
       expect(
         loop(
@@ -80,10 +80,10 @@ describe('reducer', () => {
           Cmd.run(api.save, {
             successActionCreator: saveCount.success,
             failActionCreator: saveCount.failure,
-            args: [5],
+            args: [5]
           })
         )
-      ).toEqual(result);
-    });
-  });
-});
+      ).toEqual(result)
+    })
+  })
+})

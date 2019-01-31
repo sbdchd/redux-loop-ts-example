@@ -8,3 +8,7 @@ coverage/
 *.log
 build
 *.svg
+.vscode/
+public/
+.git/
+*.snap

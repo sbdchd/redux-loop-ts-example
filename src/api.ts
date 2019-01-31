@@ -7,37 +7,37 @@ const flakify = <T>(f: () => T): Promise<T> =>
         try {
           // And ~20% of the time we'll fail
           if (Math.random() < 0.2) {
-            throw new Error('Failed arbitrarily');
+            throw new Error("Failed arbitrarily")
           }
 
-          resolve(f());
+          resolve(f())
         } catch (e) {
-          return reject(e);
+          return reject(e)
         }
       }, 200 + Math.random() * 2000) // tslint:disable-line
-  );
+  )
 
 type Counter = {
-  value: number;
-};
+  value: number
+}
 
 export type Api = {
-  save: (x: Counter) => Promise<null>;
-  load: () => Promise<number>;
-};
+  save: (x: Counter) => Promise<null>
+  load: () => Promise<number>
+}
 
 export const api: Api = {
   save: (counter: Counter): Promise<null> =>
     flakify(() => {
-      localStorage.setItem('__counterValue', counter.value.toString());
-      return null;
+      localStorage.setItem("__counterValue", counter.value.toString())
+      return null
     }),
   load: (): Promise<number> =>
     flakify(() => {
       const storedValue = parseInt(
-        localStorage.getItem('__counterValue') || '',
+        localStorage.getItem("__counterValue") || "",
         10
-      );
+      )
       return storedValue || 0
-    }),
-};
+    })
+}
