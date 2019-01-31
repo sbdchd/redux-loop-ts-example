@@ -22,8 +22,8 @@ type Counter = {
 };
 
 export type Api = {
-  save(x: Counter): Promise<null>;
-  load(): Promise<Counter>;
+  save: (x: Counter) => Promise<null>;
+  load: () => Promise<number>;
 };
 
 export const api: Api = {
@@ -32,14 +32,12 @@ export const api: Api = {
       localStorage.setItem('__counterValue', counter.value.toString());
       return null;
     }),
-  load: (): Promise<Counter> =>
+  load: (): Promise<number> =>
     flakify(() => {
       const storedValue = parseInt(
         localStorage.getItem('__counterValue') || '',
         10
       );
-      return {
-        value: storedValue || 0,
-      };
+      return storedValue || 0
     }),
 };

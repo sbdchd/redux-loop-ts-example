@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "prettier": "^1.8.2",
+    "prettier": "^1.16.3",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
     "react-redux": "^5.0.6",
-    "react-scripts-ts": "2.8.0"
+    "react-scripts-ts": "2.8.0",
+    "typesafe-actions": "^3.0.0",
+    "typescript": "^3.3.1"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -25,6 +27,6 @@
     "@types/redux-thunk": "^2.1.0",
     "react-test-renderer": "^16.1.1",
     "redux": "^3.7.2",
-    "redux-loop": "^4.2.4"
+    "redux-loop": "^4.5.4"
   }
 }

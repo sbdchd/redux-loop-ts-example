@@ -1,27 +1,27 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { saveCount, loadCount, incrementCounter, Action } from '../actions/';
-import { All } from '../reducers/';
+import { saveCount, loadCount, incrementCounter, Action } from '../reducers/';
+import { IState } from '../reducers/';
 
 interface StateProps {
-  counter: number;
-  isLoading: boolean;
-  isSaving: boolean;
-  error: Error | undefined;
+  readonly counter: number;
+  readonly isLoading: boolean;
+  readonly isSaving: boolean;
+  readonly error: Error | undefined;
 }
 
 interface DispatchProps {
-  loadCount: () => Action;
-  saveCount: (value: number) => Action;
-  incrementCounter: () => Action;
+  readonly loadCount: () => Action;
+  readonly saveCount: (value: number) => Action;
+  readonly incrementCounter: () => Action;
 }
 
-interface OwnProps {}
+interface OwnProps { }
 
 type Props = StateProps & DispatchProps & OwnProps;
 
-class CounterContainerComponent extends React.Component<Props, {}> {
+class CounterContainerComponent extends React.Component<Props> {
   saveCount = () => {
     this.props.saveCount(this.props.counter);
   };
@@ -48,7 +48,7 @@ class CounterContainerComponent extends React.Component<Props, {}> {
   }
 }
 
-function mapStateToProps(state: All): StateProps {
+function mapStateToProps(state: IState): StateProps {
   return {
     counter: state.counter,
     isLoading: state.isLoading,
@@ -57,11 +57,11 @@ function mapStateToProps(state: All): StateProps {
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch<All>): DispatchProps {
+function mapDispatchToProps(dispatch: Dispatch<IState>): DispatchProps {
   return bindActionCreators(
     {
-      loadCount: loadCount,
-      saveCount: saveCount,
+      loadCount: loadCount.request,
+      saveCount: saveCount.request,
       incrementCounter: incrementCounter,
     },
     dispatch

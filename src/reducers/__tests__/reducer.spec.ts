@@ -1,19 +1,15 @@
-import { reducer, All } from '../index';
+import { reducer, IState } from '../index';
 import {
   loadCount,
-  loadCountSuccess,
-  loadCountError,
   resetCounter,
   saveCount,
-  saveCountError,
-  saveCountSuccess,
   incrementCounter,
-} from '../../actions';
+} from '../../reducers';
 import { api } from '../../api';
 import { Cmd, loop } from 'redux-loop';
 
 describe('reducer', () => {
-  let state: All;
+  let state: IState;
 
   beforeEach(() => {
     state = {
@@ -44,14 +40,14 @@ describe('reducer', () => {
 
   describe('loadCount()', () => {
     it('returns an object which deeply equals the object returned by reducer', () => {
-      const result = reducer(state, loadCount());
+      const result = reducer(state, loadCount.request());
 
       expect(
         loop(
           { ...state, isLoading: true },
           Cmd.run(api.load, {
-            successActionCreator: loadCountSuccess,
-            failActionCreator: loadCountError,
+            successActionCreator: loadCount.success,
+            failActionCreator: loadCount.failure,
           })
         )
       ).toEqual(result);
@@ -60,14 +56,14 @@ describe('reducer', () => {
 
   describe('loadCount()', () => {
     it('returns an object which deeply equals the object returned by reducer', () => {
-      const result = reducer(state, loadCount());
+      const result = reducer(state, loadCount.request());
 
       expect(
         loop(
           { ...state, isLoading: true },
           Cmd.run(api.load, {
-            successActionCreator: loadCountSuccess,
-            failActionCreator: loadCountError,
+            successActionCreator: loadCount.success,
+            failActionCreator: loadCount.failure,
           })
         )
       ).toEqual(result);
@@ -76,14 +72,14 @@ describe('reducer', () => {
 
   describe('saveCount()', () => {
     it(' returns an object which deeply equals the object returned by reducer', () => {
-      const result = reducer(state, saveCount(5));
+      const result = reducer(state, saveCount.request(5));
 
       expect(
         loop(
           { ...state, isSaving: true },
           Cmd.run(api.save, {
-            successActionCreator: saveCountSuccess,
-            failActionCreator: saveCountError,
+            successActionCreator: saveCount.success,
+            failActionCreator: saveCount.failure,
             args: [5],
           })
         )

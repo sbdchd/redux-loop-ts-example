@@ -1,55 +1,80 @@
 import { LoopReducer, Cmd, loop, Loop } from 'redux-loop';
-import * as actions from '../actions';
 import { api } from '../api';
+import { getType } from 'typesafe-actions';
 
-export type All = {
-  counter: number;
-  isSaving: boolean;
-  isLoading: boolean;
-  error: Error | undefined;
+import { createStandardAction, ActionType, createAsyncAction } from 'typesafe-actions'
+
+export const incrementCounter = createStandardAction('INCREMENT_COUNTER')()
+export const resetCounter = createStandardAction('RESET_COUNTER')()
+
+export const saveCount = createAsyncAction(
+  "SAVE_COUNT_REQUEST",
+  "SAVE_COUNT_SUCCESS",
+  "SAVE_COUNT_ERROR",
+)<number, number, Error>()
+
+export const loadCount = createAsyncAction(
+  "LOAD_COUNT_REQUEST",
+  "LOAD_COUNT_SUCCESS",
+  "LOAD_COUNT_ERROR",
+)<void, number, Error>()
+
+export type Action =
+  // UI actions
+  | ActionType<typeof incrementCounter>
+  | ActionType<typeof resetCounter>
+  // API Requests
+  | ActionType<typeof saveCount>
+  | ActionType<typeof loadCount>
+
+export interface IState {
+  readonly counter: number;
+  readonly isSaving: boolean;
+  readonly isLoading: boolean;
+  readonly error?: Error
 };
 
-export const initialState: All = {
+export const initialState: IState = {
   counter: 0,
   isSaving: false,
   isLoading: false,
   error: undefined,
 };
 
-export const reducer: LoopReducer<All, actions.Action> = (
-  state: All = initialState,
-  action: actions.Action
-): All | Loop<All, actions.Action> => {
+export const reducer: LoopReducer<IState, Action> = (
+  state: IState = initialState,
+  action: Action
+): IState | Loop<IState, Action> => {
   switch (action.type) {
-    case 'INCREMENT_COUNTER':
+    case getType(incrementCounter):
       return { ...state, counter: state.counter + 1 };
-    case 'RESET_COUNTER':
+    case getType(resetCounter):
       return { ...state, counter: 0 };
-    case 'LOAD_COUNT':
+    case getType(loadCount.request):
       return loop(
         { ...state, isLoading: true },
         Cmd.run(api.load, {
-          successActionCreator: actions.loadCountSuccess,
-          failActionCreator: actions.loadCountError,
+          successActionCreator: loadCount.success,
+          failActionCreator: loadCount.failure,
         })
       );
-    case 'LOAD_COUNT_SUCCESS':
-      return { ...state, isLoading: false, counter: action.value };
-    case 'LOAD_COUNT_ERROR':
-      return { ...state, error: action.error, isLoading: false };
-    case 'SAVE_COUNT':
+    case getType(loadCount.success):
+      return { ...state, isLoading: false, counter: action.payload };
+    case getType(loadCount.failure):
+      return { ...state, error: action.payload, isLoading: false };
+    case getType(saveCount.request):
       return loop(
         { ...state, isSaving: true },
         Cmd.run(api.save, {
-          successActionCreator: actions.saveCountSuccess,
-          failActionCreator: actions.saveCountError,
-          args: [action.value],
+          successActionCreator: saveCount.success,
+          failActionCreator: saveCount.failure,
+          args: [action.payload],
         })
       );
-    case 'SAVE_COUNT_SUCCESS':
+    case getType(saveCount.success):
       return { ...state, isSaving: false };
-    case 'SAVE_COUNT_ERROR':
-      return { ...state, error: action.error, isSaving: false };
+    case getType(saveCount.failure):
+      return { ...state, error: action.payload, isSaving: false };
     default:
       return state;
   }

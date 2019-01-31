@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`decorators/loadable maps props to loading 1`] = `
-<div>
-  Just a moment, please...
-</div>
-`;
