@@ -51,7 +51,7 @@ function mapStateToProps(state: IState) {
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch<IState>) {
+function mapDispatchToProps(dispatch: Dispatch<IState>): Partial<IComponentProps> {
   return bindActionCreators(
     {
       loadCount: loadCount.request,

@@ -1,36 +1,30 @@
-import { createStore, compose } from 'redux';
+import { createStore, compose, StoreEnhancer } from 'redux';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { install, StoreCreator } from 'redux-loop';
-import { initialState, reducer } from './reducers';
+import { initialState, reducer, IState } from './reducers';
 
 import { CounterContainer } from './components/counter';
 
 const enhancedCreateStore = createStore as StoreCreator;
 
-let enhancer = compose(install());
-
-if (typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION__) {
-  enhancer = compose(
-    install(),
-    window.__REDUX_DEVTOOLS_EXTENSION__({
-      serialize: {
-        options: true,
-      },
-    })
-  );
-}
+const enhancer: StoreEnhancer<IState> = window.__REDUX_DEVTOOLS_EXTENSION__ ? compose(
+  install(),
+  window.__REDUX_DEVTOOLS_EXTENSION__({
+    serialize: {
+      options: true,
+    },
+  })
+) : compose(install())
 
 const store = enhancedCreateStore(reducer, initialState, enhancer);
 
-const Root: React.SFC<{}> = () => (
+const Root = () => (
   <Provider store={store}>
     <CounterContainer />
   </Provider>
 );
 
-window.addEventListener('DOMContentLoaded', () => {
-  const rootEl = document.getElementById('root');
-  ReactDOM.render(<Root />, rootEl);
-});
+const rootEl = document.getElementById('root');
+ReactDOM.render(<Root />, rootEl);
