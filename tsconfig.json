@@ -2,8 +2,6 @@
   "compilerOptions": {
     "outDir": "./build/",
     "sourceMap": true,
-    "allowJs": true,
-    "checkJs": true,
     "jsx": "react",
     "target": "es2017",
     "module": "commonjs",
@@ -12,16 +10,17 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "removeComments": false,
-    "preserveConstEnums": true,
     "skipLibCheck": true,
-    "experimentalDecorators": true,
     "esModuleInterop": true,
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": ["*"]
-    }
+    "baseUrl": "./src"
   },
-  "include": ["**/*", "*"],
-  "exclude": ["build", "node_modules", "coverage"]
+  "include": [
+    "**/*",
+    "*"
+  ],
+  "exclude": [
+    "build",
+    "node_modules",
+    "coverage"
+  ]
 }
