@@ -1,10 +1,5 @@
-## Example to demonstrate redux-loop with TypeScript
+# redux-loop-typescript-example
 
-### Using: https://github.com/facebookincubator/create-react-app
+An example of [redux-loop](https://github.com/redux-loop/redux-loop) with TypeScript
 
-### Based on: https://github.com/rjz/typescript-react-redux
-
-### Redux-loop: https://github.com/redux-loop/redux-loop
-
-Thanks to @rjz providing a great project where this example is based on and also
-thanks to all people making create-react-app so great!
+Forked from <https://github.com/meandmax/redux-loop-ts-example>
