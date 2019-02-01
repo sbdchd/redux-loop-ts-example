@@ -52,7 +52,7 @@ function mapDispatchToProps(dispatch: Dispatch<IState>) {
   )
 }
 
-export const CounterContainer = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(App)
