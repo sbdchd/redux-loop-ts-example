@@ -1,0 +1,14 @@
+build/
+node_modules/
+coverage/
+.DS_Store
+*.lint
+*.lock
+*ignore
+*.log
+build
+*.svg
+.vscode/
+public/
+.git/
+*.snap

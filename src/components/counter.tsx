@@ -1,74 +1,58 @@
-import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { saveCount, loadCount, incrementCounter, Action } from '../actions/';
-import { All } from '../reducers/';
+import * as React from "react"
+import { connect, Dispatch } from "react-redux"
+import { bindActionCreators } from "redux"
+import {
+  IState,
+  saveCount,
+  loadCount,
+  incrementCounter,
+  Status
+} from "../store/reducer"
 
-interface StateProps {
-  counter: number;
-  isLoading: boolean;
-  isSaving: boolean;
-  error: Error | undefined;
+interface IComponentProps {
+  readonly count: number
+  readonly status: Status
+  readonly error: Error | undefined
+  readonly load: () => void
+  readonly save: () => void
+  readonly increment: () => void
 }
 
-interface DispatchProps {
-  loadCount: () => Action;
-  saveCount: (value: number) => Action;
-  incrementCounter: () => Action;
+function App({ count, increment, status, save, load }: IComponentProps) {
+  return (
+    <main>
+      <h1>{count}</h1>
+      <button onClick={increment}>increment</button>
+      <button disabled={status === Status.Saving} onClick={save}>
+        {status === Status.Saving ? "saving..." : "save"}
+      </button>
+      <button disabled={status === Status.Loading} onClick={load}>
+        {status === Status.Loading ? "loading..." : "load"}
+      </button>
+    </main>
+  )
 }
 
-interface OwnProps {}
-
-type Props = StateProps & DispatchProps & OwnProps;
-
-class CounterContainerComponent extends React.Component<Props, {}> {
-  saveCount = () => {
-    this.props.saveCount(this.props.counter);
-  };
-
-  increment = () => {
-    this.props.incrementCounter();
-  };
-
-  render() {
-    return (
-      <div>
-        <div className="hero">
-          <strong>{this.props.counter}</strong>
-        </div>
-        <button onClick={this.increment}>click me!</button>
-        <button disabled={this.props.isSaving} onClick={this.saveCount}>
-          {this.props.isSaving ? 'saving...' : 'save'}
-        </button>
-        <button disabled={this.props.isLoading} onClick={this.props.loadCount}>
-          {this.props.isLoading ? 'loading...' : 'load'}
-        </button>
-      </div>
-    );
+function mapStateToProps(state: IState) {
+  return {
+    count: state.count,
+    status: state.status,
+    error: state.error
   }
 }
 
-function mapStateToProps(state: All): StateProps {
-  return {
-    counter: state.counter,
-    isLoading: state.isLoading,
-    isSaving: state.isSaving,
-    error: state.error,
-  };
-}
-
-function mapDispatchToProps(dispatch: Dispatch<All>): DispatchProps {
+function mapDispatchToProps(dispatch: Dispatch<IState>) {
   return bindActionCreators(
     {
-      loadCount: loadCount,
-      saveCount: saveCount,
-      incrementCounter: incrementCounter,
+      load: loadCount.request,
+      save: saveCount.request,
+      increment: incrementCounter
     },
     dispatch
-  );
+  )
 }
 
-export const CounterContainer = connect<StateProps, DispatchProps, OwnProps>(
+export const CounterContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(CounterContainerComponent);
+)(App)
