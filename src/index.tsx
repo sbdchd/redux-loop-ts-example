@@ -9,15 +9,16 @@ import { CounterContainer } from "./components/counter"
 
 const enhancedCreateStore = createStore as StoreCreator
 
-const enhancer: StoreEnhancer<IState> = (window as any).__REDUX_DEVTOOLS_EXTENSION__
+const enhancer: StoreEnhancer<IState> = (window as any)
+  .__REDUX_DEVTOOLS_EXTENSION__
   ? compose(
-    install(),
-    (window as any).__REDUX_DEVTOOLS_EXTENSION__({
-      serialize: {
-        options: true
-      }
-    })
-  )
+      install(),
+      (window as any).__REDUX_DEVTOOLS_EXTENSION__({
+        serialize: {
+          options: true
+        }
+      })
+    )
   : compose(install())
 
 const store = enhancedCreateStore(reducer, initialState, enhancer)

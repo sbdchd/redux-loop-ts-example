@@ -1,7 +1,13 @@
 import * as React from "react"
 import { connect, Dispatch } from "react-redux"
 import { bindActionCreators } from "redux"
-import { IState, saveCount, loadCount, incrementCounter, Action } from "../store/reducer"
+import {
+  IState,
+  saveCount,
+  loadCount,
+  incrementCounter,
+  Action
+} from "../store/reducer"
 
 interface IComponentProps {
   readonly counter: number
