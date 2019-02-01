@@ -6,63 +6,47 @@ import {
   saveCount,
   loadCount,
   incrementCounter,
-  Action
+  Status
 } from "../store/reducer"
 
 interface IComponentProps {
-  readonly counter: number
-  readonly isLoading: boolean
-  readonly isSaving: boolean
+  readonly count: number
+  readonly status: Status
   readonly error: Error | undefined
-  readonly loadCount: () => Action
-  readonly saveCount: (value: number) => Action
-  readonly incrementCounter: () => Action
+  readonly load: () => void
+  readonly save: () => void
+  readonly increment: () => void
 }
 
-class App extends React.Component<IComponentProps> {
-  saveCount = () => {
-    this.props.saveCount(this.props.counter)
-  }
-
-  increment = () => {
-    this.props.incrementCounter()
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="hero">
-          <strong>{this.props.counter}</strong>
-        </div>
-        <button onClick={this.increment}>click me!</button>
-        <button disabled={this.props.isSaving} onClick={this.saveCount}>
-          {this.props.isSaving ? "saving..." : "save"}
-        </button>
-        <button disabled={this.props.isLoading} onClick={this.props.loadCount}>
-          {this.props.isLoading ? "loading..." : "load"}
-        </button>
-      </div>
-    )
-  }
+function App({ count, increment, status, save, load }: IComponentProps) {
+  return (
+    <main>
+      <h1>{count}</h1>
+      <button onClick={increment}>increment</button>
+      <button disabled={status === Status.Saving} onClick={save}>
+        {status === Status.Saving ? "saving..." : "save"}
+      </button>
+      <button disabled={status === Status.Loading} onClick={load}>
+        {status === Status.Loading ? "loading..." : "load"}
+      </button>
+    </main>
+  )
 }
 
 function mapStateToProps(state: IState) {
   return {
-    counter: state.counter,
-    isLoading: state.isLoading,
-    isSaving: state.isSaving,
+    count: state.count,
+    status: state.status,
     error: state.error
   }
 }
 
-function mapDispatchToProps(
-  dispatch: Dispatch<IState>
-): Partial<IComponentProps> {
+function mapDispatchToProps(dispatch: Dispatch<IState>) {
   return bindActionCreators(
     {
-      loadCount: loadCount.request,
-      saveCount: saveCount.request,
-      incrementCounter
+      load: loadCount.request,
+      save: saveCount.request,
+      increment: incrementCounter
     },
     dispatch
   )

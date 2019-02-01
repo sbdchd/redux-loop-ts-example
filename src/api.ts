@@ -1,43 +1,29 @@
 // Simulate a flaky API around otherwise an otherwise synchronous `f()`.
 const flakify = <T>(f: () => T): Promise<T> =>
-  new Promise(
-    (resolve, reject) =>
-      // We'll always take 200 * (1d10 + 1) ms to respond
-      window.setTimeout(() => {
-        try {
-          // And ~20% of the time we'll fail
-          if (Math.random() < 0.2) {
-            throw new Error("Failed arbitrarily")
-          }
-
-          resolve(f())
-        } catch (e) {
-          return reject(e)
+  new Promise((resolve, reject) =>
+    // We'll always take 200 * (1d10 + 1) ms to respond
+    window.setTimeout(() => {
+      try {
+        // And ~20% of the time we'll fail
+        if (Math.random() < 0.2) {
+          throw new Error("Failed arbitrarily")
         }
-      }, 200 + Math.random() * 2000) // tslint:disable-line
+
+        resolve(f())
+      } catch (e) {
+        return reject(e)
+      }
+    }, 200 + Math.random() * 2000)
   )
 
-type Counter = {
-  value: number
-}
+const SAVE_LOCATION = "__counterValue"
 
-export type Api = {
-  save: (x: Counter) => Promise<null>
-  load: () => Promise<number>
-}
+export const save = (counter: number): Promise<void> =>
+  flakify(() => {
+    localStorage.setItem(SAVE_LOCATION, String(counter))
+  })
 
-export const api: Api = {
-  save: (counter: Counter): Promise<null> =>
-    flakify(() => {
-      localStorage.setItem("__counterValue", counter.value.toString())
-      return null
-    }),
-  load: (): Promise<number> =>
-    flakify(() => {
-      const storedValue = parseInt(
-        localStorage.getItem("__counterValue") || "",
-        10
-      )
-      return storedValue || 0
-    })
-}
+export const load = (): Promise<number> =>
+  flakify(() => {
+    return parseInt(localStorage.getItem(SAVE_LOCATION) || "", 10) || 0
+  })
