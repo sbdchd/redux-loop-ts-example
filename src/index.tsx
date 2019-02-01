@@ -5,7 +5,7 @@ import { Provider } from "react-redux"
 import { install, StoreCreator } from "redux-loop"
 import { initialState, reducer, IState } from "./store/reducer"
 
-import { CounterContainer } from "./components/counter"
+import { CounterContainer } from "./components/Counter"
 
 const enhancedCreateStore = createStore as StoreCreator
 
