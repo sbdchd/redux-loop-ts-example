@@ -72,7 +72,7 @@ export const reducer: LoopReducer<IState, Action> = (
       return { ...state, error: action.payload, status: Status.None }
     case getType(saveCount.request):
       return loop(
-        { ...state, status: Status.Loading },
+        { ...state, status: Status.Saving },
         Cmd.run(api.save, {
           successActionCreator: saveCount.success,
           failActionCreator: saveCount.failure,
